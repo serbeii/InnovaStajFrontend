@@ -1,0 +1,7 @@
+REGISTER:
+    verify email integrity in the frontend,
+    specific error messages for email and username errors,
+    force password length,
+    set up a generic error
+LOGIN:
+    allow login via email or username
