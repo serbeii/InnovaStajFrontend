@@ -28,18 +28,25 @@ const loginForm = reactive({
 });
 
 const submitForm = async() => {
-   if(!loginForm.username){
-       ElMessage({
-           message: 'Kullanıcı adı boş olamaz.',
-           type: 'warning'
-       });
-   }
+    let emptyCheck = false;
+    if(!loginForm.username){
+        ElMessage({
+            message: 'Kullanıcı adı boş olamaz.',
+            type: 'warning'
+        });
+        emptyCheck = true;
+    }
 
     if(!loginForm.password){
         ElMessage({
             message: 'Şifre boş olamaz.',
             type: 'warning'
         });
+        emptyCheck = true;
+    }
+
+    if (emptyCheck){
+        return;
     }
 
     const payload = {

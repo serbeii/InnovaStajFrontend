@@ -33,10 +33,13 @@ const registerForm = reactive({
 
 const submitForm = async() => {
     let emptyCheck = false;
+    const validEmail = validateEmail(registerForm.email);
+    const validPassword = registerForm.password.length >= 8 &&
+            registerForm.password.length <= 32;
 
-    if(!registerForm.email){
+    if(!validEmail) {
         ElMessage({
-            message: 'Email boş olamaz.',
+            message: 'Geçerli bir mail adresi giriniz',
             type: 'warning'
         });
         emptyCheck = true;
@@ -50,9 +53,9 @@ const submitForm = async() => {
         emptyCheck = true;
     }
 
-    if(!registerForm.password){
+    if(!validPassword){
         ElMessage({
-            message: 'Şifre boş olamaz.',
+            message: '8-32 karakter uzunluğunda geçerli bir şifre giriniz.',
             type: 'warning'
         });
         emptyCheck = true;
@@ -77,12 +80,31 @@ const submitForm = async() => {
             });
         }
     } catch (e) {
-        ElMessage({
-            message: 'Hesap oluşturulamadı.',
-            type: 'error'
-        });
-        console.log(e);
+        if(e.response.status === 409) {
+            if (e.response.data === 'username') {
+                ElMessage({
+                    message: 'Kullanıcı adı kullanımda.',
+                    type: 'error'
+                });
+            }
+            else if (e.response.data === 'mail') {
+                ElMessage({
+                    message: 'Eposta adresi kullanımda.',
+                    type: 'error'
+                });
+            }
+            else {
+                console.log(e)
+            }
+        }
+        else {
+            console.log(e);
+        }
     }
+}
+function validateEmail(email) {
+    const res = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return res.test(String(email).toLowerCase());
 }
 </script>
 
