@@ -2,11 +2,12 @@
     <el-form
             :label-position="labelPosition"
             :model="loginForm"
-            label-width="100px"
+            label-width="120px"
             style="max-width: 460px"
     >
-        <el-form-item label="Kullanıcı adı">
-            <el-input v-model="loginForm.username"/>
+        <el-form-item label="Kullanıcı adı veya eposta adresi" >
+
+                <el-input v-model="loginForm.username"/>
         </el-form-item>
         <el-form-item label="Şifre">
             <el-input v-model="loginForm.password" autocomplete="off" type="password"/>
@@ -20,7 +21,7 @@ import {reactive, ref} from 'vue';
 import axios from 'axios';
 import {ElMessage} from "element-plus";
 
-const labelPosition = ref('left');
+const labelPosition = ref('top');
 
 const loginForm = reactive({
     username: '',
@@ -29,7 +30,9 @@ const loginForm = reactive({
 
 const submitForm = async() => {
     let emptyCheck = false;
-    if(!loginForm.username){
+    const emailLogin = validateEmail(loginForm.username);
+
+    if(!emailLogin && !loginForm.username){
         ElMessage({
             message: 'Kullanıcı adı boş olamaz.',
             type: 'warning'
@@ -51,7 +54,8 @@ const submitForm = async() => {
 
     const payload = {
         username: loginForm.username,
-        password: loginForm.password
+        password: loginForm.password,
+        emailLogin: emailLogin
     };
 
     try {
@@ -80,11 +84,20 @@ const submitForm = async() => {
         }
     }
 }
+function validateEmail(email) {
+    const res = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return res.test(String(email).toLowerCase());
+}
 </script>
 
 
 <style scoped>
 button {
     width: 100px;
+}
+.label-line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

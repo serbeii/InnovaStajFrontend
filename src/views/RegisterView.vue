@@ -2,10 +2,10 @@
     <el-form
             :label-position="labelPosition"
             :model="registerForm"
-            label-width="100px"
+            label-width="120px"
             style="max-width: 460px"
     >
-        <el-form-item label="Email">
+        <el-form-item label="Eposta adresi">
             <el-input v-model="registerForm.email"/>
         </el-form-item>
         <el-form-item label="Kullanıcı adı">
@@ -23,7 +23,7 @@ import {reactive, ref} from 'vue';
 import axios from 'axios';
 import {ElMessage} from "element-plus";
 
-const labelPosition = ref('left');
+const labelPosition = ref('top');
 
 const registerForm = reactive({
     email: '',
@@ -36,6 +36,8 @@ const submitForm = async() => {
     const validEmail = validateEmail(registerForm.email);
     const validPassword = registerForm.password.length >= 8 &&
             registerForm.password.length <= 32;
+    const validUsername = registerForm.username.length >= 3 &&
+            registerForm.username.length <= 32;
 
     if(!validEmail) {
         ElMessage({
@@ -45,9 +47,9 @@ const submitForm = async() => {
         emptyCheck = true;
     }
 
-    if(!registerForm.username){
+    if(!validUsername){
         ElMessage({
-            message: 'Kullanıcı adı boş olamaz.',
+            message: '3-32 karakter uzunluğunda geçerli bir kullanıcı adı giriniz.',
             type: 'warning'
         });
         emptyCheck = true;
@@ -103,7 +105,7 @@ const submitForm = async() => {
     }
 }
 function validateEmail(email) {
-    const res = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    const res = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return res.test(String(email).toLowerCase());
 }
 </script>
