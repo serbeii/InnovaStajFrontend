@@ -75,33 +75,16 @@ const submitForm = async() => {
 
     try {
         const response = await axios.post('http://localhost:8080/user/register', payload);
-        if(response.status === 200) {
             ElMessage({
-                message: 'Hesap başarıyla oluşturuldu.',
+                message: response.data,
                 type: 'success'
             });
-        }
     } catch (e) {
-        if(e.response.status === 409) {
-            if (e.response.data === 'username') {
-                ElMessage({
-                    message: 'Kullanıcı adı kullanımda.',
-                    type: 'error'
-                });
-            }
-            else if (e.response.data === 'mail') {
-                ElMessage({
-                    message: 'Eposta adresi kullanımda.',
-                    type: 'error'
-                });
-            }
-            else {
-                console.log(e)
-            }
-        }
-        else {
-            console.log(e);
-        }
+       ElMessage({
+           message: e.response.data.message,
+           type: 'error'
+       })
+        console.log(e);
     }
 }
 function validateEmail(email) {

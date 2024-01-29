@@ -5,9 +5,9 @@
             label-width="120px"
             style="max-width: 460px"
     >
-        <el-form-item label="Kullanıcı adı veya eposta adresi" >
+        <el-form-item label="Kullanıcı adı veya eposta adresi">
 
-                <el-input v-model="loginForm.username"/>
+            <el-input v-model="loginForm.username"/>
         </el-form-item>
         <el-form-item label="Şifre">
             <el-input v-model="loginForm.password" autocomplete="off" type="password"/>
@@ -28,11 +28,11 @@ const loginForm = reactive({
     password: '',
 });
 
-const submitForm = async() => {
+const submitForm = async () => {
     let emptyCheck = false;
     const emailLogin = validateEmail(loginForm.username);
 
-    if(!emailLogin && !loginForm.username){
+    if (!emailLogin && !loginForm.username) {
         ElMessage({
             message: 'Kullanıcı adı boş olamaz.',
             type: 'warning'
@@ -40,7 +40,7 @@ const submitForm = async() => {
         emptyCheck = true;
     }
 
-    if(!loginForm.password){
+    if (!loginForm.password) {
         ElMessage({
             message: 'Şifre boş olamaz.',
             type: 'warning'
@@ -48,7 +48,7 @@ const submitForm = async() => {
         emptyCheck = true;
     }
 
-    if (emptyCheck){
+    if (emptyCheck) {
         return;
     }
 
@@ -67,23 +67,14 @@ const submitForm = async() => {
             });
         }
     } catch (e) {
-        if(e.response.status === 400) {
-            ElMessage({
-                message: 'Kullanıcı adı veya şifre hatalı.',
-                type: 'error'
-            });
-        }
-        else if (e.response.status === 404) {
-            ElMessage({
-                message: 'Kullanıcı bulunamadı.',
-                type: 'error'
-            });
-        }
-        else {
-            console.log(e);
-        }
+        ElMessage({
+            message: e.response.data.message,
+            type: 'error'
+        })
+        console.log(e)
     }
 }
+
 function validateEmail(email) {
     const res = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return res.test(String(email).toLowerCase());
@@ -95,6 +86,7 @@ function validateEmail(email) {
 button {
     width: 100px;
 }
+
 .label-line {
     white-space: nowrap;
     overflow: hidden;
