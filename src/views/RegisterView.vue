@@ -74,7 +74,7 @@ const submitForm = async() => {
     };
 
     try {
-        const response = await axios.post('http://localhost:8080/user/register', payload);
+        const response = await axios.post('http://localhost:8080/api/auth/register', payload);
             ElMessage({
                 message: response.data,
                 type: 'success'

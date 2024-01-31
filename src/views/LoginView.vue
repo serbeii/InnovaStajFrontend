@@ -13,6 +13,7 @@
             <el-input v-model="loginForm.password" autocomplete="off" type="password"/>
         </el-form-item>
         <el-button type="primary" @click="submitForm">Giriş yap</el-button>
+        <el-button type="primary" @click="getCookie">Cookie</el-button>
     </el-form>
 </template>
 
@@ -59,13 +60,16 @@ const submitForm = async () => {
     };
 
     try {
-        const response = await axios.post('http://localhost:8080/user/login', payload);
+        const response = await axios.post('http://localhost:8080/api/auth/login', payload);
         if (response.status === 200) {
             ElMessage({
                 message: 'Başarıyla giriş yapıldı.',
                 type: 'success'
             });
         }
+        console.log(response.data);
+        console.log(response.headers);
+        console.log(document.cookie);
     } catch (e) {
         ElMessage({
             message: e.response.data.message,
@@ -78,6 +82,16 @@ const submitForm = async () => {
 function validateEmail(email) {
     const res = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return res.test(String(email).toLowerCase());
+}
+
+const getCookie = async() => {
+    const cookieString = document.cookie;
+    const cookies = cookieString.split(';').reduce((acc, cookie) => {
+        const [name, value] = cookie.trim().split('=');
+        acc[name] = value;
+        return acc;
+    }, {});
+    console.log(cookies);
 }
 </script>
 
