@@ -29,6 +29,8 @@ const loginForm = reactive({
     password: '',
 });
 
+axios.defaults.withCredentials = true;
+
 const submitForm = async () => {
     let emptyCheck = false;
     const emailLogin = validateEmail(loginForm.username);
@@ -67,8 +69,8 @@ const submitForm = async () => {
                 type: 'success'
             });
         }
+        console.log(response);
         console.log(response.data);
-        console.log(response.headers);
         console.log(document.cookie);
     } catch (e) {
         ElMessage({
@@ -85,25 +87,13 @@ function validateEmail(email) {
 }
 
 const getCookie = async() => {
-    const cookieString = document.cookie;
-    const cookies = cookieString.split(';').reduce((acc, cookie) => {
-        const [name, value] = cookie.trim().split('=');
-        acc[name] = value;
-        return acc;
-    }, {});
-    console.log(cookies);
+    const response = await axios.post('http://localhost:8080/api/auth/test');
+    console.log(response);
 }
 </script>
-
 
 <style scoped>
 button {
     width: 100px;
-}
-
-.label-line {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 </style>
