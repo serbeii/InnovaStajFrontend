@@ -14,6 +14,7 @@
         </el-form-item>
         <el-button type="primary" @click="submitForm">Giriş yap</el-button>
         <el-button type="primary" @click="getCookie">Cookie</el-button>
+        <el-button type="primary" @click="logout">Logout</el-button>
     </el-form>
 </template>
 
@@ -21,6 +22,7 @@
 import {reactive, ref} from 'vue';
 import axios from 'axios';
 import {ElMessage} from "element-plus";
+import router from "@/router/index.js";
 
 const labelPosition = ref('top');
 
@@ -68,6 +70,7 @@ const submitForm = async () => {
                 message: 'Başarıyla giriş yapıldı.',
                 type: 'success'
             });
+            router.push(response.data.roles.includes('ROLE_ADMIN') ? '/admin' : '/');
         }
         console.log(response);
         console.log(response.data);
@@ -88,7 +91,11 @@ function validateEmail(email) {
 
 const getCookie = async() => {
     const response = await axios.post('http://localhost:8080/api/auth/test');
-    console.log(response);
+    console.log(document.cookie)
+}
+
+const logout = async() => {
+    await axios.post('http://localhost:8080/api/auth/logout');
 }
 </script>
 

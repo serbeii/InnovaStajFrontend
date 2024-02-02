@@ -1,17 +1,55 @@
 <script setup>
-import {RouterLink, RouterView} from 'vue-router'
+import {RouterLink, RouterView} from 'vue-router';
+import axios from 'axios';
+import {ref} from "vue";
+import router from "@/router/index.js";
+import {ElMessage} from "element-plus";
+
+axios.defaults.withCredentials = true;
+const loggedIn = ref(false);
+
+router.beforeEach((to, from, next) => {
+    console.log(to.path);
+    if (to.path === '/login' || to.path === '/register') {
+        next();
+    }
+    else {
+        axios.get('http://localhost:8080/api/auth/validateLogin')
+                .then(response => {
+                    if (response.status === 202) {
+                        loggedIn.value = true;
+                        next();
+                    } else {
+                        loggedIn.value = false;
+                        next('/login');
+                    }
+                })
+                .catch(e => {
+                    console.log(e);
+                    loggedIn.value = false;
+                    next('/login');
+                    ElMessage({
+                        message: 'Lütfen tekrar giriş yapınız.',
+                        type: 'error'
+                    })
+                })
+    }
+});
+
 </script>
 
 <template>
-    <header>
-        <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125"/>
-        <div class="wrapper">
-            <nav>
-                <RouterLink to="/">Giriş yap</RouterLink>
-                <RouterLink to="/register">Kayıt ol</RouterLink>
-            </nav>
-        </div>
-    </header>
+    <div v-if="!loggedIn">
+        <header>
+            <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125"/>
+            <div class="wrapper">
+                <nav>
+                    <RouterLink to="/login">Giriş yap</RouterLink>
+                    <RouterLink to="/register">Kayıt ol</RouterLink>
+                </nav>
+            </div>
+        </header>
+    </div>
     <RouterView/>
 </template>
 
