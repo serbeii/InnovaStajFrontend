@@ -39,7 +39,7 @@ router.beforeEach((to, from, next) => {
 </script>
 
 <template>
-    <div v-if="!loggedIn">
+    <div v-if="!loggedIn" class="login">
         <header>
             <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125"/>
             <div class="wrapper">
@@ -69,14 +69,6 @@ nav {
     font-size: 12px;
     text-align: center;
     margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-    color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-    background-color: transparent;
 }
 
 nav a {
