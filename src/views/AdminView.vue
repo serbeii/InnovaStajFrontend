@@ -19,16 +19,36 @@
             </template>
         </el-upload>
     </div>
+    <div>
+        <ul v-if="messages.length > 0">
+            <li v-for="(message, index) in messages" :key="index">
+                {{ message }}
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script setup>
 import {UploadFilled} from '@element-plus/icons-vue'
+import {ref} from "vue";
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
+const messages = ref([""]);
+const fetchMessages = async () => {
+    try {
+        const response = await axios.get('http://localhost:8080/api/admin/view')
+        messages.value = response.data;
+        console.log(messages.value);
+    } catch (e) {
+        console.log(e);
+    }
+}
+setInterval(fetchMessages, 1000);
 </script>
 
 <style scoped>
 .upload-container {
-    grid-column: span 2;
-    padding-left: 30px;
-    padding-right: 30px;
+    padding-left: calc(var(--section-gap));
 }
 </style>
