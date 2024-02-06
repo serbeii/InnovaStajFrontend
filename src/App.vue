@@ -13,6 +13,27 @@ router.beforeEach((to, from, next) => {
     if (to.path === '/login' || to.path === '/register') {
         next();
     }
+    else if (to.path === '/admin') {
+        axios.get('http://localhost:8080/api/admin/validate')
+                .then(response => {
+                    if (response.status === 202) {
+                        loggedIn.value = true;
+                        next();
+                    } else {
+                        loggedIn.value = false;
+                        next('/login');
+                    }
+                })
+                .catch(e => {
+                    console.log(e);
+                    loggedIn.value = false;
+                    next('/login');
+                    ElMessage({
+                        message: 'Bu sayfaya erişim yetkiniz bulunmamaktadır.',
+                        type: 'error'
+                    })
+                })
+    }
     else {
         axios.get('http://localhost:8080/api/auth/validateLogin')
                 .then(response => {

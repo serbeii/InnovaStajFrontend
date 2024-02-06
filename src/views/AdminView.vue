@@ -10,12 +10,11 @@
                 <upload-filled/>
             </el-icon>
             <div class="el-upload__text">
-                Drop file here or <em>click to upload</em>
+                Dosyanızı buraya sürükleyin veya <em>yüklemek için tıklayın</em>
             </div>
-            >
             <template #tip>
                 <div class="el-upload__tip">
-                    jpg/png files with a size less than 500kb
+                    16MB boyutundan küçük .xls/.xlsx
                 </div>
             </template>
         </el-upload>
@@ -24,9 +23,6 @@
 
 <script setup>
 import {UploadFilled} from '@element-plus/icons-vue'
-import axios from 'axios'
-
-axios.get('http://localhost:8080/api/admin/test', {withCredentials: true}).then(result => console.log(result));
 </script>
 
 <style scoped>
