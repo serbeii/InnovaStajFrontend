@@ -34,7 +34,7 @@ import {ref} from "vue";
 import axios from "axios";
 
 axios.defaults.withCredentials = true;
-const messages = ref([""]);
+const messages = ref();
 const fetchMessages = async () => {
     try {
         const response = await axios.get('http://localhost:8080/api/admin/view')
@@ -44,7 +44,7 @@ const fetchMessages = async () => {
         console.log(e);
     }
 }
-setInterval(fetchMessages, 1000);
+setInterval(fetchMessages, 5000);
 </script>
 
 <style scoped>
