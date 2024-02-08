@@ -13,7 +13,6 @@
             <el-input v-model="loginForm.password" autocomplete="off" type="password"/>
         </el-form-item>
         <el-button type="primary" @click="submitForm">Giriş yap</el-button>
-        <el-button type="primary" @click="getCookie">Cookie</el-button>
         <el-button type="primary" @click="logout">Logout</el-button>
     </el-form>
 </template>
@@ -87,11 +86,6 @@ const submitForm = async () => {
 function validateEmail(email) {
     const res = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
     return res.test(String(email).toLowerCase());
-}
-
-const getCookie = async() => {
-    const response = await axios.post('http://localhost:8080/api/auth/test');
-    console.log(document.cookie)
 }
 
 const logout = async() => {

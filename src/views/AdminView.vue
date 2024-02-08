@@ -5,6 +5,7 @@
                 action="http://localhost:8080/api/admin/upload"
                 multiple
                 with-credentials
+                :on-success='fetchMessages'
         >
             <el-icon class="el-icon--upload">
                 <upload-filled/>
@@ -18,24 +19,31 @@
                 </div>
             </template>
         </el-upload>
+        <el-button type="primary" @click="empty">Mesajları Temizle</el-button>
     </div>
-    <div>
-        <ul v-if="messages.length > 0">
-            <li v-for="(message, index) in messages" :key="index">
-                {{ message }}
-            </li>
-        </ul>
+    <div class="upload-content">
+        <el-row>
+            <el-col :span="24">
+                <div class="list-container">
+                    <div v-for="(message, index) in messages" :key="index">
+                        {{ message }}
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
 <script setup>
 import {UploadFilled} from '@element-plus/icons-vue'
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios";
+import {ElMessage} from "element-plus";
 
 axios.defaults.withCredentials = true;
-const messages = ref();
+const messages = ref([]);
 const fetchMessages = async () => {
+    console.log('test');
     try {
         const response = await axios.get('http://localhost:8080/api/admin/view')
         messages.value = response.data;
@@ -44,11 +52,38 @@ const fetchMessages = async () => {
         console.log(e);
     }
 }
+onMounted(fetchMessages);
 setInterval(fetchMessages, 5000);
+const empty = async() => {
+    try {
+        await axios.delete('http://localhost:8080/api/admin/emptyMessages');
+        await fetchMessages();
+        ElMessage({
+            type:"success",
+            message:'Mesajlar başarıyla silindi.'
+        });
+    }
+    catch (e) {
+       ElMessage({
+           type:"error",
+           message:e.response.data.message
+       });
+    }
+}
 </script>
 
 <style scoped>
 .upload-container {
     padding-left: calc(var(--section-gap));
+}
+.upload-content {
+    padding-left: calc(var(--section-gap)/4);
+    width: 450px;
+    max-height: 500px;
+    overflow: auto;
+}
+.list-container {
+    max-height: inherit;
+    overflow-y: auto;
 }
 </style>
